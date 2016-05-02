@@ -123,7 +123,7 @@ module.exports = function(app) {
 		indexar: function(req, res) {
 			var exec = require('child_process').exec,
 				child;
-			child = exec('java -jar D:/projetos/server_share/server/files/indexador.jar',
+			child = exec('java -jar /serverShareIT/server/files/indexador.jar',
 				function(error, stdout, stderr) {
 
 					console.log('stdout: ' + stdout);
