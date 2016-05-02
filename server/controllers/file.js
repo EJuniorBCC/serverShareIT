@@ -46,8 +46,9 @@ module.exports = function(app) {
 					console.log(body);
 
 
-					/*var fstream;
+					var fstream;
 					req.pipe(req.busboy);
+					if(req.busboy){
 					req.busboy.on('file', function(fieldname, file, filename) {
 							console.log("Uploading: " + filename);
 							fstream = fs.createWriteStream(pathIndexar + filename);
@@ -74,8 +75,27 @@ module.exports = function(app) {
 
 								});
 
-							});*/
-						
+							});
+						}else{
+
+							var model = File(fields);
+
+								model.save(function(err, data) {
+
+									if (err) {
+										res.json({
+											status: err
+										});
+									} else {
+										res.json({
+											status: 'success',
+											data: data
+										});
+									}
+
+								});
+
+						}
 
 
 						},
