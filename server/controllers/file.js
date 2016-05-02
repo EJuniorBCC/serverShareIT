@@ -29,7 +29,7 @@ module.exports = function(app) {
 
 				sendFile: function(req, res) {
 
-					var body = req.body;
+					var body = req.params;
 
 					var fields = {
 						name: body.name,
