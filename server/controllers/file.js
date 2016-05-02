@@ -45,14 +45,19 @@ module.exports = function(app) {
 
 			console.log(req);
 
-			var fstream;
+			/*var fstream;
 			req.pipe(req.busboy);
 			req.busboy.on('file', function(fieldname, file, filename) {
 				console.log("Uploading: " + filename);
 				fstream = fs.createWriteStream(pathIndexar+ filename);
 				file.pipe(fstream);
 	
-				fields.filePath = pathIndexar+ filename;
+				fields.filePath = pathIndexar+ filename;*/
+
+				req.on('data',function(err,data){
+
+						console.log(data);
+				});
 
 				var model = File(fields);
 
