@@ -19,7 +19,7 @@ module.exports = function(app) {
 	return {
 		setup: function() {
 			app.use(allowCORS);
-			
+
 			app.get('/app/file',file.index);
 			app.post('/app/file/sendFile',file.sendFile);
 			app.post('/app/findFile/:key',file.findFile);
