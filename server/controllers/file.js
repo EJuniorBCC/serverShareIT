@@ -2,7 +2,7 @@ module.exports = function(app) {
 
 	var File = require('../models/file')(app);
 	var fs = require('fs');
-	var pathIndexar = "/serverShareIT/server/files/indexar";
+	var pathIndexar = "/serverShareIT/server/files/indexar/";
 	var pathIndexado = "D:/serverShare/server/files/indexado/";
 	var needle = require('needle');
 
