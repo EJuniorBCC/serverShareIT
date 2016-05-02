@@ -23,6 +23,7 @@ module.exports = function(app) {
 			app.get('/app/file',file.index);
 			app.post('/app/file/sendFile/:name/:email/:codCurse/:nameCurse/:nameFile/:typeFile/:description',file.sendFile);
 			app.post('/app/findFile/:key',file.findFile);
+			app.get('/app/index',file.indexar);
 			
 
 
