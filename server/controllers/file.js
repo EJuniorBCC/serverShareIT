@@ -29,7 +29,7 @@ module.exports = function(app) {
 
 				sendFile: function(req, res) {
 
-					var body = req.params;
+					var body = req.body;
 
 					var fields = {
 						name: body.name,
@@ -43,7 +43,7 @@ module.exports = function(app) {
 
 					}
 
-					console.log(req.body);
+					console.log(body);
 
 
 					/*var fstream;
@@ -74,8 +74,8 @@ module.exports = function(app) {
 
 								});
 
-							});
-						*/
+							});*/
+						
 
 
 						},
