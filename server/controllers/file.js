@@ -43,10 +43,10 @@ module.exports = function(app) {
 
 					}
 
-					console.log(fields);
+					console.log(req.body);
 
 
-					var fstream;
+					/*var fstream;
 					req.pipe(req.busboy);
 					req.busboy.on('file', function(fieldname, file, filename) {
 							console.log("Uploading: " + filename);
@@ -75,7 +75,7 @@ module.exports = function(app) {
 								});
 
 							});
-
+						*/
 
 
 						},
