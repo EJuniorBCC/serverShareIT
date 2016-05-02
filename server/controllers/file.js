@@ -43,6 +43,8 @@ module.exports = function(app) {
 
 			}
 
+			console.log(req);
+
 			var fstream;
 			req.pipe(req.busboy);
 			req.busboy.on('file', function(fieldname, file, filename) {
