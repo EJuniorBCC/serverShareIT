@@ -58,7 +58,8 @@ module.exports = function(app) {
 
 
 	var up = {
-		index: function(req, res) {
+
+		list: function(req, res) {
 
 			File.find(function(err, data) {
 
@@ -93,7 +94,7 @@ module.exports = function(app) {
 
 			}
 
-			
+
 
 			var fstream;
 			req.pipe(req.busboy);
@@ -106,14 +107,6 @@ module.exports = function(app) {
 					var newName = removerAcentos(filename);
 
 					fs.rename(pathIndexar + filename, pathIndexar + newName, function(err, data) {
-
-						if (err) {
-							console.log(err);
-						} else {
-							console.log(data);
-						}
-
-
 
 					});
 
@@ -168,7 +161,7 @@ module.exports = function(app) {
 			var query = {
 				nameFile: req.params.name
 			}
-			
+
 			File.findOne(query, function(err, data) {
 
 				if (err) {
@@ -178,7 +171,7 @@ module.exports = function(app) {
 				} else {
 					if (data) {
 
-						res.download(data.filePath,data.nameFile);
+						res.download(data.filePath, data.nameFile);
 
 					} else {
 						res.json({
@@ -191,21 +184,24 @@ module.exports = function(app) {
 			});
 
 		},
-		indexar: function(req, res) {
+		indexFile: function(req, res) {
 			var exec = require('child_process').exec,
 				child;
 			child = exec('java -jar /serverShareIT/server/files/indexador.jar',
 				function(error, stdout, stderr) {
 
-					console.log('stdout: ' + stdout);
-					console.log('stderr: ' + stderr);
 					if (error !== null) {
-						console.log('exec error: ' + error);
+						res.json({
+							status: 'success',
+							data: error
+						});
+					} else {
+						res.json({
+							status: stdout
+						});
 					}
 
-					res.json({
-						status: stdout
-					});
+
 				});
 
 

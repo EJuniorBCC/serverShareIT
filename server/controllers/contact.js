@@ -6,7 +6,7 @@ module.exports = function(app) {
 
 
 	var index = {
-		index: function(req, res) {
+		list: function(req, res) {
 
 			Contact.find(function(err, data) {
 

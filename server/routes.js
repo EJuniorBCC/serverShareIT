@@ -21,11 +21,15 @@ module.exports = function(app) {
 		setup: function() {
 			app.use(allowCORS);
 
-			app.get('/app/file',file.index);
+			app.get('/app/file',file.list);
 			app.post('/app/file/sendFile/:name/:email/:codCurse/:nameCurse/:nameFile/:typeFile/:description',file.sendFile);
 			app.get('/app/findFile/:name',file.findFile);
-			app.get('/app/index',file.indexar);
+			app.get('/app/index',file.indexFile);
 			app.get('/app/find/:key',file.searchDocument);
+
+
+			app.post('app/contact',contact.insert);
+			app.get('app/contact',contact.list);
 			
 
 
