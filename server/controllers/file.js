@@ -236,7 +236,7 @@ module.exports = function(app) {
 
 			console.log(req.query);
 
-			var json = JSON.parse(req.query);
+			var json = JSON.parse(req.query.data);
 			console.log(json);
 
 			/*File.findOne(query, function(err, data) {
