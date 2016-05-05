@@ -254,23 +254,25 @@ module.exports = function(app) {
 							status: err
 						});
 					} else {
-						console.log(data);
+						console.log(data.name);
 						if (data) {
 
 							retorno.push(data);
 
-						} 
+						}
 
 					}
 
 				});
 
-				res.json({
-					status:'success',
-					data:retorno
-				});
 
 			}
+
+			res.json({
+				status: 'success',
+				data: retorno
+			});
+
 
 			File.findOne(query, function(err, data) {
 
