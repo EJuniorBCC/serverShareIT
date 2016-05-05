@@ -254,8 +254,9 @@ module.exports = function(app) {
 							status: err
 						});
 					} else {
-						console.log(data.name);
+
 						if (data) {
+							console.log(data.name);
 
 							retorno.push(data);
 
