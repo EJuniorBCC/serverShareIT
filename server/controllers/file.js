@@ -49,6 +49,32 @@ module.exports = function(app) {
 		"Ç": "C"
 	};
 
+	var returnFile = function(name) {
+
+		var query = {
+			fileName: name
+		}
+
+		File.findOne(query, function(err, data) {
+
+			if (err) {
+				res.json({
+					status: err
+				});
+			} else {
+
+				if (data) {
+
+					return data;
+
+				}
+
+			}
+
+		});
+
+	}
+
 
 	function removerAcentos(s) {
 		return s.replace(/[\W\[\] ]/g, function(a) {
@@ -236,7 +262,7 @@ module.exports = function(app) {
 
 			var retorno = [];
 			var arr = JSON.parse(req.query.data);
-	
+
 
 			for (var i = 0; i < arr.length; i++) {
 
@@ -245,11 +271,11 @@ module.exports = function(app) {
 			}
 
 			res.json({
-				status:'success',
-				data:retorno
+				status: 'success',
+				data: retorno
 			});
 
-			
+
 		}
 
 
@@ -259,31 +285,5 @@ module.exports = function(app) {
 
 	return up
 
-
-}
-
-var returnFile = function(name) {
-
-	var query = {
-		fileName:name
-	}
-
-	File.findOne(query, function(err, data) {
-
-		if (err) {
-			res.json({
-				status: err
-			});
-		} else {
-
-			if (data) {
-
-				return data;
-
-			}
-
-		}
-
-	});
 
 }
