@@ -236,71 +236,20 @@ module.exports = function(app) {
 
 			var retorno = [];
 			var arr = JSON.parse(req.query.data);
-			console.log(arr);
+	
 
 			for (var i = 0; i < arr.length; i++) {
 
-
-				var query = {
-					nameFile: arr[i]
-				}
-
-				console.log(arr[i]);
-
-				File.findOne(query, function(err, data) {
-
-					if (err) {
-						res.json({
-							status: err
-						});
-					} else {
-
-						if (data) {
-							console.log(data.name);
-
-							retorno.push(data);
-
-						} else if (data && i == arr.length - 1) {
-							console.log(retorno);
-							res.json({
-								status: 'success',
-								data: retorno
-							});
-
-						}
-
-					}
-
-				});
-
+				retorno.add(arr[i]);
 
 			}
 
-
-
-			File.findOne(query, function(err, data) {
-
-				if (err) {
-					res.json({
-						status: err
-					});
-				} else {
-					if (data) {
-
-						res.json({
-							status: 'success',
-							data: data
-						});
-
-					} else {
-						res.json({
-							status: "Arquivo não encontrado"
-						});
-					}
-
-				}
-
+			res.json({
+				status:'success',
+				data:retorno
 			});
+
+			
 		}
 
 
@@ -310,5 +259,31 @@ module.exports = function(app) {
 
 	return up
 
+
+}
+
+var returnFile = function(name) {
+
+	var query = {
+		fileName:name
+	}
+
+	File.findOne(query, function(err, data) {
+
+		if (err) {
+			res.json({
+				status: err
+			});
+		} else {
+
+			if (data) {
+
+				return data;
+
+			}
+
+		}
+
+	});
 
 }
