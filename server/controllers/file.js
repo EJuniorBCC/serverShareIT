@@ -260,6 +260,12 @@ module.exports = function(app) {
 
 							retorno.push(data);
 
+						} else if (i == data.length - 1) {
+							res.json({
+								status: 'success',
+								data: retorno
+							});
+
 						}
 
 					}
@@ -269,10 +275,6 @@ module.exports = function(app) {
 
 			}
 
-			res.json({
-				status: 'success',
-				data: retorno
-			});
 
 
 			File.findOne(query, function(err, data) {
