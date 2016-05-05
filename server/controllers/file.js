@@ -250,15 +250,13 @@ module.exports = function(app) {
 				$or: arrOr
 			}
 
-			console.log(arrOr);
-
 			File.find(query, function(err, data) {
 				if (err) {
 					res.json({
 						status: err
 					});
 				} else {
-					console.log(data);
+					
 					res.json({
 						status: 'success',
 						data:data
