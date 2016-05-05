@@ -234,7 +234,7 @@ module.exports = function(app) {
 		},
 		getFileMongo: function(req, res) {
 
-			console.log(req.body);
+			console.log(req);
 
 			/*File.findOne(query, function(err, data) {
 
