@@ -244,7 +244,7 @@ module.exports = function(app) {
 					nameFile: data[i]
 				}
 
-				console.log(query);
+				console.log(data[i]);
 
 				File.findOne(query, function(err, data) {
 
