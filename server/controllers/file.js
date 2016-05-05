@@ -240,14 +240,14 @@ module.exports = function(app) {
 
 
 
-			for(var i = 0 ; i < arr.length ; i++){
+			for (var i = 0; i < arr.length; i++) {
 
 				arrOr.push({
-					fileName:arr[i]
+					fileName: arr[i]
 				});
 			}
 			var query = {
-				$or:arrOr
+				$or: arrOr
 			}
 
 			console.log(arrOr);
@@ -265,25 +265,7 @@ module.exports = function(app) {
 
 			});
 
-
-
-			res.json({
-				status: 'success',
-				data: retorno
-			});
-
-
-		},
-		getMongo: function(req, res) {
-
-			var query = {
-				fileName: req.params.name
-			}
-
-
-
 		}
-
 
 
 	}
