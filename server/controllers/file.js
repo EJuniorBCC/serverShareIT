@@ -2,9 +2,59 @@ module.exports = function(app) {
 
 	var File = require('../models/file')(app);
 	var fs = require('fs');
-	var pathIndexar = "/serverShareIT/server/files/indexar/";
-	var pathIndexado = "/serverShareIT/server/files/indexado/";
+	//var pathIndexar = "/serverShareIT/server/files/indexar/";
+	//var pathIndexado = "/serverShareIT/server/files/indexado/";
+	var pathIndexar = 'D:/server_share/server/files/indexar/';
+	var pathIndexado = "D:/server_share/server/files/indexado/";
 	var needle = require('needle');
+	var str = require('string');
+	var map = {
+		"â": "a",
+		"Â": "A",
+		"à": "a",
+		"À": "A",
+		"á": "a",
+		"Á": "A",
+		"ã": "a",
+		"Ã": "A",
+		"ê": "e",
+		"Ê": "E",
+		"è": "e",
+		"È": "E",
+		"é": "e",
+		"É": "E",
+		"î": "i",
+		"Î": "I",
+		"ì": "i",
+		"Ì": "I",
+		"í": "i",
+		"Í": "I",
+		"õ": "o",
+		"Õ": "O",
+		"ô": "o",
+		"Ô": "O",
+		"ò": "o",
+		"Ò": "O",
+		"ó": "o",
+		"Ó": "O",
+		"ü": "u",
+		"Ü": "U",
+		"û": "u",
+		"Û": "U",
+		"ú": "u",
+		"Ú": "U",
+		"ù": "u",
+		"Ù": "U",
+		"ç": "c",
+		"Ç": "C"
+	};
+
+
+	function removerAcentos(s) {
+		return s.replace(/[\W\[\] ]/g, function(a) {
+			return map[a] || a
+		})
+	};
 
 
 	var up = {
@@ -36,15 +86,14 @@ module.exports = function(app) {
 				email: body.email,
 				codCurse: body.codCurse,
 				nameCurse: body.nameCurse,
-				nameFile: body.nameFile,
+				nameFile: '',
 				typeFile: body.typeFile,
 				description: body.description,
 				filePath: ''
 
 			}
 
-			console.log(body);
-
+			
 
 			var fstream;
 			req.pipe(req.busboy);
@@ -54,9 +103,22 @@ module.exports = function(app) {
 					fstream = fs.createWriteStream(pathIndexar + filename);
 					file.pipe(fstream);
 
-					fields.filePath = pathIndexar + filename;
+					var newName = removerAcentos(filename);
+
+					fs.rename(pathIndexar + filename, pathIndexar + newName, function(err, data) {
+
+						if (err) {
+							console.log(err);
+						} else {
+							console.log(data);
+						}
 
 
+
+					});
+
+					fields.filePath = pathIndexado + newName;
+					fields.nameFile = newName;
 
 					var model = File(fields);
 
@@ -74,6 +136,8 @@ module.exports = function(app) {
 						}
 
 					});
+
+
 
 				});
 			} else {
@@ -101,29 +165,36 @@ module.exports = function(app) {
 		},
 		findFile: function(req, res) {
 
-			var url = 'http://localhost:8080/serverShare/ws/busca?palavra=' + req.params.key;
+			var query = {
+				nameFile: req.params.name
+			}
+			
+			File.findOne(query, function(err, data) {
 
-			console.log(url);
-
-			needle.get(url, function(err, data) {
 				if (err) {
 					res.json({
 						status: err
-					})
-				} else {
-
-					res.json({
-						status: 'success',
-						data: data.body
 					});
+				} else {
+					if (data) {
+
+						res.download(data.filePath,data.nameFile);
+
+					} else {
+						res.json({
+							status: "Arquivo não encontrado"
+						});
+					}
+
 				}
+
 			});
 
 		},
 		indexar: function(req, res) {
 			var exec = require('child_process').exec,
 				child;
-			child = exec('java -jar /serverShareIT/server/files/indexador.jar',
+			child = exec('java -jar D:/server_share/server/files/indexador.jar',
 				function(error, stdout, stderr) {
 
 					console.log('stdout: ' + stdout);
@@ -131,12 +202,39 @@ module.exports = function(app) {
 					if (error !== null) {
 						console.log('exec error: ' + error);
 					}
+
+					res.json({
+						status: stdout
+					});
 				});
 
 
+
+		},
+		searchDocument: function(req, res) {
+
+			var exec = require('child_process').exec,
+				child;
+			child = exec('java -jar D:/server_share/server/files/buscador.jar ' + req.params.key,
+				function(error, stdout, stderr) {
+
 					res.json({
-						status:'success'
+						status: 'success',
+						data: stdout
 					});
+
+					if (error !== null) {
+
+						res.json({
+							status: error
+						});
+					} else {
+
+					}
+
+				});
+
+
 		}
 
 

@@ -1,6 +1,7 @@
 module.exports = function(app) {
 	
 	var file = require('./controllers/file')(app);
+	var contact = require('./controllers/contact')(app);
 
 
 	function allowCORS(req, res, next) {
@@ -22,8 +23,9 @@ module.exports = function(app) {
 
 			app.get('/app/file',file.index);
 			app.post('/app/file/sendFile/:name/:email/:codCurse/:nameCurse/:nameFile/:typeFile/:description',file.sendFile);
-			app.post('/app/findFile/:key',file.findFile);
+			app.get('/app/findFile/:name',file.findFile);
 			app.get('/app/index',file.indexar);
+			app.get('/app/find/:key',file.searchDocument);
 			
 
 
