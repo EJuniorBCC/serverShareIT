@@ -236,6 +236,7 @@ module.exports = function(app) {
 
 			var retorno = [];
 			var data = JSON.parse(req.query.data);
+			console.log(data);
 
 			for (var i = 0; i < data.length; i++) {
 
