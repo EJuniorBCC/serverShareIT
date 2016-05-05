@@ -240,7 +240,7 @@ module.exports = function(app) {
 
 			for (var i = 0; i < arr.length; i++) {
 
-				retorno.add(arr[i]);
+				retorno.push(returnFile(arr[i]));
 
 			}
 
