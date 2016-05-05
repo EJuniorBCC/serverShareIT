@@ -239,9 +239,12 @@ module.exports = function(app) {
 
 			for (var i = 0; i < data.length; i++) {
 
+
 				var query = {
 					nameFile: data[i]
 				}
+
+				console.log(query);
 
 				File.findOne(query, function(err, data) {
 
@@ -250,6 +253,7 @@ module.exports = function(app) {
 							status: err
 						});
 					} else {
+						console.log(data);
 						if (data) {
 
 							retorno.push(data);
