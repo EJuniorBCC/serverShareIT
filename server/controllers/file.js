@@ -49,30 +49,6 @@ module.exports = function(app) {
 		"Ç": "C"
 	};
 
-	var returnFile = function(name) {
-
-		var query = {
-			fileName: name
-		}
-		console.log(name);
-
-		File.findOne(query, function(err, data) {
-
-			if (err) {
-				return err;
-			} else {
-
-				if (data) {
-					console.log(data.name);
-					return data;
-
-				}
-
-			}
-
-		});
-
-	}
 
 
 	function removerAcentos(s) {
@@ -259,22 +235,51 @@ module.exports = function(app) {
 		},
 		getFileMongo: function(req, res) {
 
-			var retorno = [];
 			var arr = JSON.parse(req.query.data);
+			var arrOr = [];
 
 
-			for (var i = 0; i < arr.length; i++) {
-				console.log(arr[i]);
-				var reto = returnFile(arr[i]);
-				console.log(reto);
-				retorno.push(reto);
 
+			for(var i = 0 ; i < arr.length ; i++){
+
+				arrOr.push({
+					fileName:arr[i]
+				});
 			}
+			var query = {
+				$or:arrOr
+			}
+
+			console.log(arrOr);
+
+			File.find(query, function(err, data) {
+				if (err) {
+					res.json({
+						status: err
+					});
+				} else {
+					res.json({
+						status: data
+					});
+				}
+
+			});
+
+
 
 			res.json({
 				status: 'success',
 				data: retorno
 			});
+
+
+		},
+		getMongo: function(req, res) {
+
+			var query = {
+				fileName: req.params.name
+			}
+
 
 
 		}
