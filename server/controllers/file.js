@@ -235,17 +235,17 @@ module.exports = function(app) {
 		getFileMongo: function(req, res) {
 
 			var retorno = [];
-			var data = JSON.parse(req.query.data);
+			var arr = JSON.parse(req.query.data);
 			console.log(data);
 
-			for (var i = 0; i < data.length; i++) {
+			for (var i = 0; i < arr.length; i++) {
 
 
 				var query = {
-					nameFile: data[i]
+					nameFile: arr[i]
 				}
 
-				console.log(data[i]);
+				console.log(arr[i]);
 
 				File.findOne(query, function(err, data) {
 
@@ -260,7 +260,7 @@ module.exports = function(app) {
 
 							retorno.push(data);
 
-						} else if (i == data.length - 1) {
+						} else if (data && i == arr.length - 1) {
 							res.json({
 								status: 'success',
 								data: retorno
