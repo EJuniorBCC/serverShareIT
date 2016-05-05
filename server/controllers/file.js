@@ -54,17 +54,16 @@ module.exports = function(app) {
 		var query = {
 			fileName: name
 		}
+		console.log(name);
 
 		File.findOne(query, function(err, data) {
 
 			if (err) {
-				res.json({
-					status: err
-				});
+				return err;
 			} else {
 
 				if (data) {
-
+					console.log(data.name);
 					return data;
 
 				}
@@ -265,8 +264,10 @@ module.exports = function(app) {
 
 
 			for (var i = 0; i < arr.length; i++) {
-
-				retorno.push(returnFile(arr[i]));
+				console.log(arr[i]);
+				var reto = returnFile(arr[i]);
+				console.log(reto);
+				retorno.push(reto);
 
 			}
 
