@@ -231,6 +231,34 @@ module.exports = function(app) {
 				});
 
 
+		},
+		getFileMongo: function(req, res) {
+
+			console.log(req.body);
+
+			/*File.findOne(query, function(err, data) {
+
+				if (err) {
+					res.json({
+						status: err
+					});
+				} else {
+					if (data) {
+
+						res.json({
+							status:'success',
+							data: data
+						});
+
+					} else {
+						res.json({
+							status: "Arquivo não encontrado"
+						});
+					}
+
+				}
+
+			});*/
 		}
 
 

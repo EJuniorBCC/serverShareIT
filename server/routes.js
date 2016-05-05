@@ -26,6 +26,7 @@ module.exports = function(app) {
 			app.get('/app/findFile/:name',file.findFile);
 			app.get('/app/index',file.indexFile);
 			app.get('/app/find/:key',file.searchDocument);
+			app.get('/app/findMongo',file.getFileMongo)
 
 
 			app.post('app/contact',contact.insert);

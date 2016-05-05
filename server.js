@@ -15,17 +15,6 @@ var Mongo = require('./server/config')
 var app = express();
 var server = http.createServer(app);
 
-server.setMaxListeners(0);
-
-app.use(helmet());
-
-app.use(helmet.hidePoweredBy({
-	setTo: 'PHP 5.4.0'
-}));
-
-app.use(helmet.xssFilter({
-	setOnOldIE: true
-}));
 
 app.use(busboy()); 
 
@@ -43,7 +32,6 @@ mongo.inicializar();
 
 
 server.listen(port, function() {
-
 
 	console.log("Servidor iniciado na porta " + port);
 });
