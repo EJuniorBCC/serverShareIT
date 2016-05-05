@@ -234,12 +234,40 @@ module.exports = function(app) {
 		},
 		getFileMongo: function(req, res) {
 
-			console.log(req.query);
+			var retorno = [];
+			var data = JSON.parse(req.query.data);
 
-			var json = JSON.parse(req.query.data);
-			console.log(json);
+			for (var i = 0; i < data.length; i++) {
 
-			/*File.findOne(query, function(err, data) {
+				var query = {
+					nameFile: data[i]
+				}
+
+				File.findOne(query, function(err, data) {
+
+					if (err) {
+						res.json({
+							status: err
+						});
+					} else {
+						if (data) {
+
+							retorno.push(data);
+
+						} 
+
+					}
+
+				});
+
+				res.json({
+					status:'success',
+					data:retorno
+				});
+
+			}
+
+			File.findOne(query, function(err, data) {
 
 				if (err) {
 					res.json({
@@ -249,7 +277,7 @@ module.exports = function(app) {
 					if (data) {
 
 						res.json({
-							status:'success',
+							status: 'success',
 							data: data
 						});
 
@@ -261,7 +289,7 @@ module.exports = function(app) {
 
 				}
 
-			});*/
+			});
 		}
 
 
