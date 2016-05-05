@@ -243,7 +243,7 @@ module.exports = function(app) {
 			for (var i = 0; i < arr.length; i++) {
 
 				arrOr.push({
-					fileName: arr[i]
+					nameFile: arr[i]
 				});
 			}
 			var query = {
@@ -258,6 +258,7 @@ module.exports = function(app) {
 						status: err
 					});
 				} else {
+					console.log(data);
 					res.json({
 						status: data
 					});
