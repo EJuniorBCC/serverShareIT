@@ -261,6 +261,7 @@ module.exports = function(app) {
 							retorno.push(data);
 
 						} else if (data && i == arr.length - 1) {
+							console.log(retorno);
 							res.json({
 								status: 'success',
 								data: retorno
