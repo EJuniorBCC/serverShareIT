@@ -2,10 +2,10 @@ module.exports = function(app) {
 
 	var File = require('../models/file')(app);
 	var fs = require('fs');
-	//var pathIndexar = "/serverShareIT/server/files/indexar/";
-	//var pathIndexado = "/serverShareIT/server/files/indexado/";
-	var pathIndexar = 'D:/server_share/server/files/indexar/';
-	var pathIndexado = "D:/server_share/server/files/indexado/";
+	var pathIndexar = "/serverShareIT/server/files/indexar/";
+	var pathIndexado = "/serverShareIT/server/files/indexado/";
+	//var pathIndexar = 'D:/server_share/server/files/indexar/';
+	//var pathIndexado = "D:/server_share/server/files/indexado/";
 	var needle = require('needle');
 	var str = require('string');
 	var map = {
