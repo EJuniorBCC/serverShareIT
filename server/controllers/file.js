@@ -260,7 +260,8 @@ module.exports = function(app) {
 				} else {
 					console.log(data);
 					res.json({
-						status: data
+						status: 'success',
+						data:data
 					});
 				}
 
