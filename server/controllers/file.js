@@ -62,6 +62,7 @@ module.exports = function(app) {
 
 		list: function(req, res) {
 
+
 			File.find(function(err, data) {
 
 				if (err) {
@@ -83,6 +84,7 @@ module.exports = function(app) {
 
 			var body = req.params;
 
+
 			var fields = {
 				name: body.name,
 				email: body.email,
@@ -91,7 +93,11 @@ module.exports = function(app) {
 				nameFile: '',
 				typeFile: body.typeFile,
 				description: body.description,
-				filePath: ''
+				filePath: '',
+				title: body.nameFile,
+				rating: [],
+				downloadsNumber: 0,
+				comments: []
 
 			}
 
@@ -99,42 +105,20 @@ module.exports = function(app) {
 
 			var fstream;
 			req.pipe(req.busboy);
-			if (req.busboy) {
-				req.busboy.on('file', function(fieldname, file, filename) {
-					console.log("Uploading: " + filename);
-					fstream = fs.createWriteStream(pathIndexar + filename);
-					file.pipe(fstream);
 
-					var newName = removerAcentos(filename);
+			req.busboy.on('file', function(fieldname, file, filename) {
+				console.log("Uploading: " + filename);
+				fstream = fs.createWriteStream(pathIndexar + filename);
+				file.pipe(fstream);
 
-					fs.rename(pathIndexar + filename, pathIndexar + newName, function(err, data) {
+				var newName = removerAcentos(filename);
 
-					});
-
-					fields.filePath = pathIndexado + newName;
-					fields.nameFile = newName;
-
-					var model = File(fields);
-
-					model.save(function(err, data) {
-
-						if (err) {
-							res.json({
-								status: err
-							});
-						} else {
-							res.json({
-								status: 'success',
-								data: data
-							});
-						}
-
-					});
-
-
+				fs.rename(pathIndexar + filename, pathIndexar + newName, function(err, data) {
 
 				});
-			} else {
+
+				fields.filePath = pathIndexado + newName;
+				fields.nameFile = newName;
 
 				var model = File(fields);
 
@@ -153,17 +137,21 @@ module.exports = function(app) {
 
 				});
 
-			}
+
+
+			});
+
 
 
 		},
 		findFile: function(req, res) {
-
-			var query = {
+			var query ={
 				nameFile: req.params.name
 			}
+		
 
 			File.findOne(query, function(err, data) {
+				
 
 				if (err) {
 					res.json({
@@ -172,7 +160,22 @@ module.exports = function(app) {
 				} else {
 					if (data) {
 
+						var mod = {
+							downloadsNumber: data.downloadsNumber + 1
+						}
+
+						File.update(query, mod, function(err, data) {
+							if (err) {
+								res.json({
+									status: err
+								});
+							} else {
+								
+							}
+						});
+
 						res.download(data.filePath, data.nameFile);
+
 
 					} else {
 						res.json({
@@ -256,13 +259,245 @@ module.exports = function(app) {
 						status: err
 					});
 				} else {
-					
+
 					res.json({
 						status: 'success',
-						data:data
+						data: data
 					});
 				}
 
+			});
+
+		},
+		getDownloads: function(req, res) {
+
+			var query = {
+				_id: req.params.id
+			}
+
+			File.findOne(query, function(err, data) {
+
+				if (err) {
+					res.json({
+						status: err
+					});
+				} else {
+					if (data) {
+						res.json({
+							status: 'success',
+							data: data.downloadsNumber
+						});
+
+					} else {
+						res.json({
+							status: 'Arquivo não encontrado'
+						});
+					}
+
+				}
+
+			});
+
+		},
+		addRating: function(req, res) {
+
+
+
+			var query = {
+				_id: req.body.idFile
+			}
+
+			var mod = {
+				$push: {
+					rating: {
+						idUser: req.body.idUser,
+						value: req.body.value
+					}
+				}
+
+			}
+
+			File.findOne(query, function(err, date) {
+				if (err) {
+					res.json({
+						status: err
+					});
+				} else {
+
+
+					if (date) {
+
+						var rating = date.rating;
+						var flag = false;
+
+						if (rating.length <= 0) {
+							flag = true;
+
+							File.update(query, mod, function(err, data) {
+
+
+								if (err) {
+									res.json({
+										status: err
+									});
+								} else {
+
+									res.json({
+										status: 'success',
+										data: data
+									});
+								}
+
+							});
+
+						} else {
+
+
+							for (var i = 0; i < rating.length; i++) {
+
+								if (rating[i].idUser == req.body.idUser) {
+
+									flag = true;
+								}
+							}
+
+							if (!flag) {
+								File.update(query, mod, function(err, data) {
+
+									if (err) {
+										res.json({
+											status: err
+										});
+									} else {
+
+										res.json({
+											status: 'success',
+											data: data
+										});
+									}
+
+								});
+							} else {
+								res.json({
+									status: 'Usuário já votou!!'
+								});
+							}
+						}
+
+
+					} else {
+						res.json({
+							status: 'Arquivo não encontrado'
+						});
+					}
+				}
+
+			});
+
+
+
+		},
+		getRating: function(req, res) {
+
+			var query = {
+				_id: req.params.id
+			}
+
+			File.findOne(query, function(err, data) {
+
+				if (err) {
+					res.json({
+						status: err
+					});
+				} else {
+					if (data) {
+						var mid;
+
+						if (data.rating.length <= 0) {
+							mid = 1;
+						} else {
+							mid = data.rating.length;
+						}
+
+
+						var sum = 0;
+
+						for (var i = 0; i < data.rating.length; i++) {
+
+							sum += data.rating[i].value;
+
+						};
+
+						sum = sum / mid;
+
+						res.json({
+							status: 'success',
+							data: sum
+						});
+					} else {
+						res.json({
+							status: 'Arquivo não encontrado'
+						});
+					}
+
+				}
+			});
+		},
+		addComment: function(req, res) {
+
+			var query = {
+				_id: req.body.id
+			}
+
+
+			var mod = {
+
+				$push: {
+					comments: {
+						author: req.body.author,
+						text: req.body.text
+					}
+				}
+			}
+
+			File.update(query, mod, function(err, data) {
+				if (err) {
+					res.json({
+						status: err
+					});
+				} else {
+					res.json({
+						status: 'success',
+						data: data
+					});
+				}
+			});
+		},
+		getComment: function(req, res) {
+
+			var query = {
+				_id: req.params.id
+			}
+
+			File.findOne(query, function(err, data) {
+
+				if (err) {
+					res.json({
+						status: err
+					});
+				} else {
+					if (data) {
+						
+						res.json({
+							status: 'success',
+							data: data.comments
+						});
+					} else {
+						res.json({
+							status: 'Arquivo não encontrado'
+						});
+					}
+				}
 			});
 
 		}

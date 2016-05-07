@@ -15,6 +15,9 @@ var Mongo = require('./server/config')
 var app = express();
 var server = http.createServer(app);
 
+app.use(bodyParser.urlencoded({limit: '50mb'}));
+app.use(bodyParser.json({limit: '50mb'}));
+
 
 app.use(busboy()); 
 

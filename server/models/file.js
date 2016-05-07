@@ -12,6 +12,24 @@ module.exports = function(app) {
 		typeFile: String,
 		description: String,
 		filePath: String,
+		title: String,
+		rating: [{
+			idUser:String,
+			value:Number,
+			date: {
+				type: Date,
+				default: Date.now
+			}
+		}],
+		comments: [{
+			author: String,
+			text: String,
+			date: {
+				type: Date,
+				default: Date.now
+			}
+		}],
+		downloadsNumber: Number,
 		date: {
 			type: Date,
 			default: Date.now
