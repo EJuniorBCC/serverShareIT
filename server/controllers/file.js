@@ -265,6 +265,7 @@ module.exports = function(app) {
                         status: err
                     });
                 } else {
+                    console.log(data);
 
                     if (data.length > 0) {
                         res.json({
