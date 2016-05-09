@@ -265,20 +265,13 @@ module.exports = function(app) {
                         status: err
                     });
                 } else {
-                    console.log(data);
 
-                    if (data.length > 0) {
-                        res.json({
-                            status: 'success',
-                            data: data
-                        });
+                    res.json({
+                        status: 'success',
+                        data: data
+                    });
 
-                    } else {
-                        res.json({
-                            status: 'Nenhum arquivo não encontrado'
-                        });
 
-                    }
 
 
                 }
