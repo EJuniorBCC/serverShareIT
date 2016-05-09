@@ -266,10 +266,20 @@ module.exports = function(app) {
                     });
                 } else {
 
-                    res.json({
-                        status: 'success',
-                        data: data
-                    });
+                    if (data.length > 0) {
+                        res.json({
+                            status: 'success',
+                            data: data
+                        });
+
+                    } else {
+                        res.json({
+                            status: 'Nenhum arquivo não encontrado'
+                        });
+
+                    }
+
+
                 }
 
             });
