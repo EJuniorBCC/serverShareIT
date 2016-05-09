@@ -238,10 +238,13 @@ module.exports = function(app) {
         },
         getFileMongo: function(req, res) {
 
-            console.log(req.query);
-            console.log(req.body);
 
-            var arr = JSON.parse(req.query.data);
+            var arr;
+            if (req.body.data.length > 0) {
+                arr = JSON.parse(req.body.data);
+            } else {
+                arr = [];
+            }
             var arrOr = [];
 
 
