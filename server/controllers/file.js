@@ -239,6 +239,7 @@ module.exports = function(app) {
         getFileMongo: function(req, res) {
 
             console.log(req.query);
+            console.log(req.body);
 
             var arr = JSON.parse(req.query.data);
             var arrOr = [];
