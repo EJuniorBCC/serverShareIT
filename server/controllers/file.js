@@ -273,7 +273,6 @@ module.exports = function(app) {
 
 
 
-
                 }
 
             });
@@ -312,20 +311,12 @@ module.exports = function(app) {
         addRating: function(req, res) {
 
 
-
+            console.log(req.body);
             var query = {
                 _id: req.body.idFile
             }
 
-            var mod = {
-                $push: {
-                    rating: {
-                        idUser: req.body.idUser,
-                        value: req.body.value
-                    }
-                }
 
-            }
 
             File.findOne(query, function(err, date) {
                 if (err) {
@@ -333,7 +324,6 @@ module.exports = function(app) {
                         status: err
                     });
                 } else {
-
 
                     if (date) {
 
@@ -343,15 +333,23 @@ module.exports = function(app) {
                         if (rating.length <= 0) {
                             flag = true;
 
-                            File.update(query, mod, function(err, data) {
+                            var mod = {
+                                $push: {
+                                    rating: {
+                                        idUser: req.body.idUser,
+                                        value: req.body.value
+                                    }
+                                }
 
+                            }
+
+                            File.update(query, mod, function(err, data) {
 
                                 if (err) {
                                     res.json({
                                         status: err
                                     });
                                 } else {
-
                                     res.json({
                                         status: 'success',
                                         data: data
@@ -363,16 +361,50 @@ module.exports = function(app) {
                         } else {
 
 
+
                             for (var i = 0; i < rating.length; i++) {
 
                                 if (rating[i].idUser == req.body.idUser) {
 
-                                    rating.value = req.body.value;
+                                    rating[i].value = req.body.value;
+                                    flag = true;
 
+                                    var up = {
+                                        rating: rating
+
+                                    }
+
+                                    File.update(query, up, function(err, data) {
+
+                                        if (err) {
+                                            res.json({
+                                                status: err
+                                            });
+                                        } else {
+
+                                            res.json({
+                                                status: 'success',
+                                                data: data
+                                            });
+                                        }
+
+                                    });
                                 }
                             }
 
+
+
                             if (!flag) {
+
+                                var mod = {
+                                    $push: {
+                                        rating: {
+                                            idUser: req.body.idUser,
+                                            value: req.body.value
+                                        }
+                                    }
+
+                                }
                                 File.update(query, mod, function(err, data) {
 
                                     if (err) {
