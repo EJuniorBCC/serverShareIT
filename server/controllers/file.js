@@ -18,7 +18,7 @@ module.exports = function(app) {
 
 
         list: function(req, res) {
-           
+
 
             File.find(function(err, data) {
 
@@ -220,6 +220,8 @@ module.exports = function(app) {
                             status: error
                         });
                     } else {
+
+                        console.log(stdout);
                         var str = stdout.replace(' ', '');
                         str = str.replace('[', '');
                         str = str.replace(']', '');
@@ -228,18 +230,30 @@ module.exports = function(app) {
                         var arr = str.split(',');
                         var ar = [];
 
+                        console.log(arr);
 
-                        for (var i = 0; i < arr.length; i++) {
+                        if (ar.length <= 0) {
 
-                            ar.push(mongoose.Types.ObjectId(arr[i].slice(0, -4)));
-                        }
+                            var qy = '';
 
-                        var qy = {
-                            _id: {
-                                $in: ar
+                        } else {
+
+                            for (var i = 0; i < arr.length; i++) {
+
+                                ar.push(mongoose.Types.ObjectId(arr[i].slice(0, -4)));
                             }
+
+                            var qy = {
+                                _id: {
+                                    $in: ar
+                                }
+                            }
+
                         }
-                        File.find(qy,{nameFile:1}, function(err, data) {
+
+                        File.find(qy, {
+                            nameFile: 1
+                        }, function(err, data) {
                             if (err) {
                                 res.json({
                                     status: err
