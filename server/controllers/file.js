@@ -2,66 +2,23 @@ module.exports = function(app) {
 
     var File = require('../models/file')(app);
     var fs = require('fs');
-    var pathIndexar = "/serverShareIT/server/files/indexar/";
-    var pathIndexado = "/serverShareIT/server/files/indexado/";
-    //var pathIndexar = 'D:/server_share/server/files/indexar/';
-    //var pathIndexado = "D:/server_share/server/files/indexado/";
+    //var pathIndexar = "/serverShareIT/server/files/indexar/";
+    //var pathIndexado = "/serverShareIT/server/files/indexado/";
+    var pathIndexar = 'D:/server_share/server/files/indexar/';
+    var pathIndexado = "D:/server_share/server/files/indexado/";
     var needle = require('needle');
     var str = require('string');
-    var map = {
-        "â": "a",
-        "Â": "A",
-        "à": "a",
-        "À": "A",
-        "á": "a",
-        "Á": "A",
-        "ã": "a",
-        "Ã": "A",
-        "ê": "e",
-        "Ê": "E",
-        "è": "e",
-        "È": "E",
-        "é": "e",
-        "É": "E",
-        "î": "i",
-        "Î": "I",
-        "ì": "i",
-        "Ì": "I",
-        "í": "i",
-        "Í": "I",
-        "õ": "o",
-        "Õ": "O",
-        "ô": "o",
-        "Ô": "O",
-        "ò": "o",
-        "Ò": "O",
-        "ó": "o",
-        "Ó": "O",
-        "ü": "u",
-        "Ü": "U",
-        "û": "u",
-        "Û": "U",
-        "ú": "u",
-        "Ú": "U",
-        "ù": "u",
-        "Ù": "U",
-        "ç": "c",
-        "Ç": "C"
-    };
+    var slack = require('../util/slack');
+    var removerAcentos = require('../util/map');
+    var mongoose = require('mongoose');
 
-
-
-    function removerAcentos(s) {
-        return s.replace(/[\W\[\] ]/g, function(a) {
-            return map[a] || a
-        })
-    };
-
+    var sendEmail = require('../util/email');
 
     var up = {
 
-        list: function(req, res) {
 
+        list: function(req, res) {
+           
 
             File.find(function(err, data) {
 
@@ -82,24 +39,48 @@ module.exports = function(app) {
 
         sendFile: function(req, res) {
 
-            var body = req.params;
-
+            var params = req.params;
+            var user = req.decode;
+            user = {
+                _id: '1',
+                email: 'juninhocsm2009@gmail.com'
+            }
 
             var fields = {
-                name: body.name,
-                email: body.email,
-                codCurse: body.codCurse,
-                nameCurse: body.nameCurse,
+                name: params.name,
+                email: params.email,
+                codCurse: params.codCurse,
+                nameCurse: params.nameCurse,
                 nameFile: '',
-                typeFile: body.typeFile,
-                description: body.description,
+                typeFile: params.typeFile,
+                description: params.description,
+                status: 'analise',
                 filePath: '',
-                title: body.nameFile,
+                title: params.nameFile,
+                idUser: user._id,
                 rating: [],
                 downloadsNumber: 0,
                 comments: []
 
             }
+
+            /*toEmail = {
+
+                mailOptions: {
+                    from: 'shareit.ufrpe@gmail.com',
+                    to: user.email,
+                    subject: 'Status Arquivo',
+                    html: 'Arquivo em análise'
+                }
+            }
+
+            sendEmail.sendEmail(toEmail, function(err, data) {
+                if (err) {
+                    console.log(err);
+                } else {
+                    console.log('success');
+                }
+            });*/
 
 
 
@@ -112,13 +93,10 @@ module.exports = function(app) {
                 file.pipe(fstream);
 
                 var newName = removerAcentos(filename);
-
-                fs.rename(pathIndexar + filename, pathIndexar + newName, function(err, data) {
-
-                });
-
-                fields.filePath = pathIndexado + newName;
+                var ext = newName.slice(-4);
+                fields.typeFile = ext;
                 fields.nameFile = newName;
+
 
                 var model = File(fields);
 
@@ -129,6 +107,16 @@ module.exports = function(app) {
                             status: err
                         });
                     } else {
+
+                        newName = data._id + ext;
+
+
+                        fs.rename(pathIndexar + filename, pathIndexar + newName, function(err, data) {
+
+                        });
+
+                        fields.filePath = pathIndexado + newName;
+                        fields.nameFile = newName;
                         res.json({
                             status: 'success',
                             data: data
@@ -146,7 +134,7 @@ module.exports = function(app) {
         },
         findFile: function(req, res) {
             var query = {
-                nameFile: req.params.name
+                _id: req.params.id
             }
 
 
@@ -191,7 +179,11 @@ module.exports = function(app) {
         indexFile: function(req, res) {
             var exec = require('child_process').exec,
                 child;
-            child = exec('java -jar /serverShareIT/server/files/indexador.jar',
+
+            var query = 'java -jar /server_share/server/files/windows/indexador.jar';
+            var query_ubuntu = 'java -jar /serverShareIT/server/files/windows/indexador.jar';
+
+            child = exec(query_ubuntu,
                 function(error, stdout, stderr) {
 
                     if (error !== null) {
@@ -215,13 +207,12 @@ module.exports = function(app) {
 
             var exec = require('child_process').exec,
                 child;
-            child = exec('java -jar /serverShareIT/server/files/buscador.jar ' + req.params.key,
+
+            var query = 'java -jar /server_share/server/files/windows/buscador.jar ';
+            var query_ubuntu = 'java -jar /serverShareIT/server/files/ubuntu/buscador.jar ';
+            child = exec(query_ubuntu + req.params.key,
                 function(error, stdout, stderr) {
 
-                    res.json({
-                        status: 'success',
-                        data: stdout
-                    });
 
                     if (error !== null) {
 
@@ -229,6 +220,40 @@ module.exports = function(app) {
                             status: error
                         });
                     } else {
+                        var str = stdout.replace(' ', '');
+                        str = str.replace('[', '');
+                        str = str.replace(']', '');
+                        str = str.replace('\n', '');
+                        str = str.replace('\r', '');
+                        var arr = str.split(',');
+                        var ar = [];
+
+
+                        for (var i = 0; i < arr.length; i++) {
+
+                            ar.push(mongoose.Types.ObjectId(arr[i].slice(0, -4)));
+                        }
+
+                        var qy = {
+                            _id: {
+                                $in: ar
+                            }
+                        }
+                        File.find(qy,{nameFile:1}, function(err, data) {
+                            if (err) {
+                                res.json({
+                                    status: err
+                                });
+                            } else {
+                                res.json({
+                                    status: 'success',
+                                    data: data
+                                });
+
+                            }
+                        });
+
+
 
                     }
 
@@ -241,7 +266,7 @@ module.exports = function(app) {
 
             var arr;
             if (req.body.data.length > 0) {
-                arr = JSON.parse(req.body.data);
+                arr = req.body.data;
             } else {
                 arr = [];
             }
@@ -252,7 +277,7 @@ module.exports = function(app) {
             for (var i = 0; i < arr.length; i++) {
 
                 arrOr.push({
-                    nameFile: arr[i]
+                    _id: arr[i]._id
                 });
             }
             var query = {
@@ -310,8 +335,6 @@ module.exports = function(app) {
         },
         addRating: function(req, res) {
 
-
-            console.log(req.body);
             var query = {
                 _id: req.body.idFile
             }
@@ -543,7 +566,25 @@ module.exports = function(app) {
                 }
             });
 
+        },
+        removeFile: function(req, res) {
+
+            var path = req.body.path;
+            var idFile = req.body.idFile;
+
+            fs.unlink(path, function(err, data) {
+                if (err) {
+                    res.json({
+                        status: err
+                    });
+                } else {
+                    res.json({
+                        status: 'success'
+                    });
+                }
+            });
         }
+
 
 
     }

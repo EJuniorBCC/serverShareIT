@@ -13,6 +13,8 @@ module.exports = function(app) {
 		description: String,
 		filePath: String,
 		title: String,
+		status:String,
+		idUser:String,
 		rating: [{
 			idUser:String,
 			value:Number,

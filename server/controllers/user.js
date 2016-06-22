@@ -3,6 +3,8 @@ module.exports = function(app) {
 	var User = require('../models/user')(app);
 	var fs = require('fs');
 	var needle = require('needle');
+	var jwt = require('jsonwebtoken');
+	var config = require('../config');
 
 
 	var index = {
@@ -31,7 +33,8 @@ module.exports = function(app) {
 
 			var fields = {
 				name: body.name,
-				email: body.email
+				email: body.email,
+				password: body.password
 
 			}
 
@@ -54,6 +57,49 @@ module.exports = function(app) {
 			});
 
 
+
+		},
+		authentication: function(req, res) {
+
+			var email = req.body.email;
+			var password = req.body.password;
+
+			var query = {
+				email: email,
+				password: password
+			}
+
+			User.findOne(query, function(err, data) {
+				if (err) {
+					res.json({
+						status: err
+					});
+				} else {
+					if (data) {
+
+						var token = jwt.sign(data, config.secret, {
+							expiresIn: '24h'
+						});
+
+
+						res.json({
+							status: 'success',
+							data: {
+								token:token,
+								name:data.name
+							}
+						});
+					} else {
+						res.json({
+							status: 'Falha na autenticação'
+						});
+					}
+
+
+
+				}
+
+			});
 
 		}
 

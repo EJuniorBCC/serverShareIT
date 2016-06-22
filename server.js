@@ -4,22 +4,31 @@ var port = process.env.PORT || 4000;
 var app = express();
 var http = require('http');
 var Routes = require('./server/routes');
-require('events').EventEmitter.prototype._maxListeners = 1000;
 var routes;
 var expressValidator = require('express-validator');
 var helmet = require('helmet');
 var busboy = require('connect-busboy');
-var Mongo = require('./server/config')
-
+var config = require('./server/config');
+var allowCors = require('./server/util/allowCors');
+var token = require('./server/util/tokenVerification');
 
 var app = express();
 var server = http.createServer(app);
 
-app.use(bodyParser.urlencoded({limit: '50mb'}));
-app.use(bodyParser.json({limit: '50mb'}));
+app.use(bodyParser.urlencoded({
+	limit: '50mb'
+}));
+app.use(bodyParser.json({
+	limit: '50mb'
+}));
+
+//app.use('/app',token);
 
 
-app.use(busboy()); 
+app.use(allowCors);
+
+
+app.use(busboy());
 
 app.use(bodyParser.urlencoded({
 	extended: true
@@ -30,8 +39,7 @@ app.use(expressValidator());
 routes = new Routes(app);
 routes.setup();
 
-mongo = new Mongo(app);
-mongo.inicializar();	
+config.start();
 
 
 server.listen(port, function() {
