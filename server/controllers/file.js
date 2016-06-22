@@ -181,7 +181,7 @@ module.exports = function(app) {
                 child;
 
             var query = 'java -jar /server_share/server/files/windows/indexador.jar';
-            var query_ubuntu = 'java -jar /serverShareIT/server/files/windows/indexador.jar';
+            var query_ubuntu = 'java -jar /serverShareIT/server/files/windows/indexador_ubuntu.jar';
 
             child = exec(query_ubuntu,
                 function(error, stdout, stderr) {
@@ -209,7 +209,7 @@ module.exports = function(app) {
                 child;
 
             var query = 'java -jar /server_share/server/files/windows/buscador.jar ';
-            var query_ubuntu = 'java -jar /serverShareIT/server/files/ubuntu/buscador.jar ';
+            var query_ubuntu = 'java -jar /serverShareIT/server/files/ubuntu/buscador_ubuntu.jar ';
             child = exec(query_ubuntu + req.params.key,
                 function(error, stdout, stderr) {
 
