@@ -219,24 +219,25 @@ module.exports = function(app) {
                             status: error
                         });
                     } else {
-
-                        var str = stdout.replace(' ', '');
-                        str = str.replace('[', '');
-                        str = str.replace(']', '');
-                        str = str.replace('\n', '');
-                        str = str.replace('\r', '');
-                        var arr = str.split(',');
-                        var ar = [];
-
-
-                        if (ar.length <= 0) {
+                        console.log(stdout);
+                        if (stdout.length <= 4) {
 
                             res.json({
-                                status:'Erro',
-                                data:"Nenhum arquivo encontrado"
+                                status: 'Erro',
+                                data: "Nenhum arquivo encontrado"
                             });
 
                         } else {
+
+                            var str = stdout.replace(' ', '');
+                            str = str.replace('[', '');
+                            str = str.replace(']', '');
+                            str = str.replace('\n', '');
+                            str = str.replace('\r', '');
+                            var arr = str.split(',');
+                            var ar = [];
+
+
 
                             for (var i = 0; i < arr.length; i++) {
 
