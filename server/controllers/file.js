@@ -181,14 +181,13 @@ module.exports = function(app) {
                 child;
 
             var query = 'java -jar /server_share/server/files/windows/indexador.jar';
-            var query_ubuntu = 'java -jar /serverShareIT/server/files/windows/indexador_ubuntu.jar';
+            var query_ubuntu = 'java -jar /serverShareIT/server/files/ubuntu/indexador_ubuntu.jar';
 
             child = exec(query_ubuntu,
                 function(error, stdout, stderr) {
 
                     if (error !== null) {
                         res.json({
-                            status: 'success',
                             data: error
                         });
                     } else {
@@ -221,7 +220,6 @@ module.exports = function(app) {
                         });
                     } else {
 
-                        console.log(stdout);
                         var str = stdout.replace(' ', '');
                         str = str.replace('[', '');
                         str = str.replace(']', '');
@@ -230,11 +228,13 @@ module.exports = function(app) {
                         var arr = str.split(',');
                         var ar = [];
 
-                        console.log(arr);
 
                         if (ar.length <= 0) {
 
-                            var qy = '';
+                            res.json({
+                                status:'Erro',
+                                data:"Nenhum arquivo encontrado"
+                            });
 
                         } else {
 
