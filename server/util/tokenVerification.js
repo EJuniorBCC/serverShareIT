@@ -11,7 +11,7 @@ module.exports = function(req, res, next) {
 	jwt.verify(token, config.secret, function(err, data) {
 		if (err) {
 			res.json({
-				status: err
+				status: 'Token Inválido'
 			});
 		} else {
 			req.decode = data._doc;

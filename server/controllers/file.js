@@ -438,7 +438,7 @@ module.exports = function(app) {
 
 
 
-            File.findOne(query, function(err, date) {
+            File.findOne(query, function(err, date){
                 if (err) {
                     res.json({
                         status: err

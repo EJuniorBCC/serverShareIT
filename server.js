@@ -43,7 +43,7 @@ app.use(bodyParser.json({
 	limit: '50mb'
 }));
 
-//app.use('/app',token);
+app.use('/admin',token);
 
 
 app.use(allowCors);
