@@ -12,7 +12,7 @@ module.exports = function(app) {
 			app.get('/app/file', file.list);
 			app.get('/app/fileOpen',file.listFiles);
 			app.post('/app/file/sendFile/:name/:email/:codCurse/:nameCurse/:nameFile/:typeFile/:description', file.sendFile);
-			app.get('/app/findFile/:name', file.findFile);
+			app.get('/app/findFile/:id', file.findFile);
 			app.get('/app/index', file.indexFile);
 			app.get('/app/find/:key', file.searchDocument);
 			app.post('/app/findMongo', file.getFileMongo);
