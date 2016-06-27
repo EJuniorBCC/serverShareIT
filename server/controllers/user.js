@@ -5,6 +5,7 @@ module.exports = function(app) {
 	var needle = require('needle');
 	var jwt = require('jsonwebtoken');
 	var config = require('../config');
+	var sanitize = require('mongo-sanitize');
 
 
 	var index = {
@@ -32,9 +33,9 @@ module.exports = function(app) {
 			var body = req.body;
 
 			var fields = {
-				name: body.name,
-				email: body.email,
-				password: body.password
+				name: sanitize(body.name),
+				email: sanitize(body.email),
+				password: sanitize(body.password)
 
 			}
 
@@ -61,8 +62,8 @@ module.exports = function(app) {
 		},
 		authentication: function(req, res) {
 
-			var email = req.body.email;
-			var password = req.body.password;
+			var email = sanitize(req.body.email);
+			var password = sanitize(req.body.password);
 
 			var query = {
 				email: email,

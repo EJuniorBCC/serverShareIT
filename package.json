@@ -17,6 +17,7 @@
     "helmet": "^0.13.0",
     "jade": "~1.3.0",
     "jsonwebtoken": "^7.0.1",
+    "mongo-sanitize": "^1.0.0",
     "mongoose": "^4.2.5",
     "morgan": "~1.0.0",
     "mysql": "^2.9.0",

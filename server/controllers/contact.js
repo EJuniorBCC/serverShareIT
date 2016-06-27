@@ -31,10 +31,10 @@ module.exports = function(app) {
 			var body = req.body;
 
 			var fields = {
-				name: body.name,
-				email: body.email,
-				subject: body.subject,
-				message: body.message
+				name: sanitize(body.name),
+				email: sanitize(body.email),
+				subject: sanitize(body.subject),
+				message: sanitize(body.message)
 
 			}
 

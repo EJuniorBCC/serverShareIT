@@ -11,6 +11,7 @@ module.exports = function(app) {
     var slack = require('../util/slack');
     var removerAcentos = require('../util/map');
     var mongoose = require('mongoose');
+    var sanitize = require('mongo-sanitize');
 
     var sendEmail = require('../util/email');
 
@@ -36,28 +37,39 @@ module.exports = function(app) {
             });
 
         },
+        listFiles: function(req, res) {
+
+            File.find({
+                status: 'analise'
+            }, function(err, data) {
+                if (err) {
+                    res.json({
+                        status: err
+                    });
+                } else {
+                    res.json({
+                        status: 'success',
+                        data: data
+                    });
+                }
+            });
+        },
 
         sendFile: function(req, res) {
 
             var params = req.params;
-            var user = req.decode;
-            user = {
-                _id: '1',
-                email: 'juninhocsm2009@gmail.com'
-            }
 
             var fields = {
-                name: params.name,
-                email: params.email,
-                codCurse: params.codCurse,
-                nameCurse: params.nameCurse,
+                name: sanitize(params.name),
+                email: sanitize(params.email),
+                codCurse: sanitize(params.codCurse),
+                nameCurse: sanitize(params.nameCurse),
                 nameFile: '',
-                typeFile: params.typeFile,
-                description: params.description,
+                typeFile: sanitize(params.typeFile),
+                description: sanitize(params.description),
                 status: 'analise',
                 filePath: '',
-                title: params.nameFile,
-                idUser: user._id,
+                title: sanitize(params.nameFile),
                 rating: [],
                 downloadsNumber: 0,
                 comments: []
@@ -115,12 +127,30 @@ module.exports = function(app) {
 
                         });
 
-                        fields.filePath = pathIndexado + newName;
-                        fields.nameFile = newName;
-                        res.json({
-                            status: 'success',
-                            data: data
-                        });
+                        var query = {
+                            _id: data._id
+                        }
+
+                        var mod = {
+                            filePath: pathIndexar + newName
+                        }
+
+                        File.update(query, mod, function(err, data) {
+                            if (err) {
+                                res.json({
+                                    status: err
+                                });
+                            } else {
+                                res.json({
+                                    status: 'success',
+                                    data: {
+                                        _id: data._id,
+                                        path: mod.filePath
+                                    }
+                                })
+                            }
+                        })
+
                     }
 
                 });
@@ -133,8 +163,10 @@ module.exports = function(app) {
 
         },
         findFile: function(req, res) {
+
+
             var query = {
-                _id: req.params.id
+                _id: sanitize(req.params.id)
             }
 
 
@@ -180,6 +212,33 @@ module.exports = function(app) {
             var exec = require('child_process').exec,
                 child;
 
+            fs.readdir(pathIndexar, function(err, data) {
+                if (err) {
+                    res.json({
+                        status: err
+                    });
+                }
+                var ids = [];
+                var mod = {
+                    status: 'indexado'
+                }
+                var query = {
+                    _id: ''
+                }
+                for (var i = 0; i < data.length; i++) {
+                    query._id = data[i].slice(0, -4);
+                    File.update(query, mod, function(err, data) {
+                        if (err) {
+                            res.json({
+                                status: err
+                            })
+                        }
+
+                    });
+                }
+
+            });
+
             var query = 'java -jar /server_share/server/files/windows/indexador.jar';
             var query_ubuntu = 'java -jar /serverShareIT/server/files/ubuntu/indexador_ubuntu.jar';
 
@@ -209,7 +268,7 @@ module.exports = function(app) {
 
             var query = 'java -jar /server_share/server/files/windows/buscador.jar ';
             var query_ubuntu = 'java -jar /serverShareIT/server/files/ubuntu/buscador_ubuntu.jar ';
-            child = exec(query_ubuntu + req.params.key,
+            child = exec(query_ubuntu + sanitize(req.params.key),
                 function(error, stdout, stderr) {
 
 
@@ -219,7 +278,6 @@ module.exports = function(app) {
                             status: error
                         });
                     } else {
-                        console.log(stdout);
                         if (stdout.length <= 4) {
 
                             res.json({
@@ -253,7 +311,11 @@ module.exports = function(app) {
                         }
 
                         File.find(qy, {
-                            nameFile: 1
+                            nameFile: 1,
+                            typeFile:1,
+                            description:1,
+                            filePath:1,
+                            title:1
                         }, function(err, data) {
                             if (err) {
                                 res.json({
@@ -321,7 +383,7 @@ module.exports = function(app) {
         getDownloads: function(req, res) {
 
             var query = {
-                _id: req.params.id
+                _id: sanitize(req.params.id)
             }
 
             File.findOne(query, function(err, data) {
@@ -351,7 +413,7 @@ module.exports = function(app) {
         addRating: function(req, res) {
 
             var query = {
-                _id: req.body.idFile
+                _id: sanitize(req.body.idFile)
             }
 
 
@@ -481,7 +543,7 @@ module.exports = function(app) {
         getRating: function(req, res) {
 
             var query = {
-                _id: req.params.id
+                _id: sanitize(req.params.id)
             }
 
             File.findOne(query, function(err, data) {
@@ -527,7 +589,7 @@ module.exports = function(app) {
         addComment: function(req, res) {
 
             var query = {
-                _id: req.body.id
+                _id: sanitize(req.body.id)
             }
 
 
@@ -557,7 +619,7 @@ module.exports = function(app) {
         getComment: function(req, res) {
 
             var query = {
-                _id: req.params.id
+                _id: sanitize(req.params.id)
             }
 
             File.findOne(query, function(err, data) {
@@ -584,20 +646,58 @@ module.exports = function(app) {
         },
         removeFile: function(req, res) {
 
-            var path = req.body.path;
-            var idFile = req.body.idFile;
+            var query = {
+                _id: sanitize(req.body.idFile)
+            }
 
-            fs.unlink(path, function(err, data) {
+            File.findOne(query, function(err, file) {
                 if (err) {
                     res.json({
                         status: err
                     });
                 } else {
-                    res.json({
-                        status: 'success'
-                    });
+                    if (file) {
+
+                        var mod = {
+                            status: 'deletado'
+                        }
+
+                        fs.unlink(file.filePath, function(err, data) {
+                            if (err) {
+                                res.json({
+                                    status: err
+                                });
+                            } else {
+                                File.update(query, mod, function(err, update) {
+                                    if (err) {
+                                        res.json({
+                                            status: err
+                                        });
+                                    } else {
+                                        res.json({
+                                            status: 'success',
+                                            data: 'Deletado'
+                                        });
+
+
+                                    }
+                                });
+
+                            }
+                        });
+
+
+
+                    } else {
+                        res.json({
+                            status: 'Arquivo não encontrado'
+                        });
+                    }
                 }
             });
+
+
+
         }
 
 
