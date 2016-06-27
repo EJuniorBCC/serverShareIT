@@ -1,9 +1,10 @@
 module.exports = function(app) {
 
-	var Contact = require('../models/contact')(app);
+	var Contact = require('../models/contact');
 	var fs = require('fs');
 	var needle = require('needle');
 	var email = require('../util/email');
+	var sanitize = require('mongo-sanitize');
 
 
 	var index = {
