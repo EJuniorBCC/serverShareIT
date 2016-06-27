@@ -2,10 +2,10 @@ module.exports = function(app) {
 
     var File = require('../models/file')(app);
     var fs = require('fs');
-    //var pathIndexar = "/serverShareIT/server/files/indexar/";
-    //var pathIndexado = "/serverShareIT/server/files/indexado/";
-    var pathIndexar = 'D:/server_share/server/files/indexar/';
-    var pathIndexado = "D:/server_share/server/files/indexado/";
+    var pathIndexar = "/serverShareIT/server/files/indexar/";
+    var pathIndexado = "/serverShareIT/server/files/indexado/";
+    //var pathIndexar = 'D:/server_share/server/files/indexar/';
+    //var pathIndexado = "D:/server_share/server/files/indexado/";
     var needle = require('needle');
     var str = require('string');
     var slack = require('../util/slack');
@@ -229,7 +229,6 @@ module.exports = function(app) {
                     _id: ''
                 }
                 for (var i = 0; i < data.length; i++) {
-                    console.log(data[i]);
                     query._id = data[i].slice(0, -4);
 
                     File.findOne(query, function(err, data) {
@@ -284,7 +283,7 @@ module.exports = function(app) {
             var query = 'java -jar /server_share/server/files/windows/indexador.jar';
             var query_ubuntu = 'java -jar /serverShareIT/server/files/ubuntu/indexador_ubuntu.jar';
 
-            child = exec(query,
+            child = exec(query_ubuntu,
                 function(error, stdout, stderr) {
 
                     if (error !== null) {
