@@ -14,7 +14,7 @@ var token = require('./server/util/tokenVerification');
 
 
 //Politicas de segurança para prevenir o XSS Ataque
-/*app.use(helmet.contentSecurityPolicy({
+app.use(helmet.contentSecurityPolicy({
   directives: {
     defaultSrc: ["'self'"],
     scriptSrc: ["'self'"],
@@ -25,16 +25,16 @@ var token = require('./server/util/tokenVerification');
 
 
 // Evita que os navegadores interpretem o conteudo dos arquivos
-app.use(helmet.noSniff());*/
+app.use(helmet.noSniff());
 
 var app = express();
 var server = http.createServer(app);
 
 //Esconde o cabeçalho X-Powered-By
-/*app.use(helmet.hidePoweredBy());
+app.use(helmet.hidePoweredBy());
 
 //Avisa aos navegadores mais modernos para habilitar a segurança Anti-XSS
-app.use(helmet.xssFilter());*/
+app.use(helmet.xssFilter());
 
 app.use(bodyParser.urlencoded({
 	limit: '50mb'

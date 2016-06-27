@@ -14,7 +14,6 @@ module.exports = function(req, res, next) {
 				status: 'Token Inválido'
 			});
 		} else {
-			req.decode = data._doc;
 
 			next();
 
