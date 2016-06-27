@@ -3,8 +3,8 @@ module.exports = function(req, res, next) {
 	var token = '';
 	var config = require('../config');
 
-	if (req.headers['x-access-token']) {
-		token = req.headers['x-access-token'];
+	if (req.params.token) {
+		token = req.params.token
 	}
 
 

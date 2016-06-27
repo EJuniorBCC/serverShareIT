@@ -10,10 +10,10 @@ module.exports = function(app) {
 		setup: function() {
 
 			app.get('/app/file', file.list);
-			app.get('/admin/fileOpen',file.listFiles);
+			app.get('/admin/fileOpen/:token',file.listFiles);
 			app.post('/app/file/sendFile/:name/:email/:codCurse/:nameCurse/:nameFile/:typeFile/:description', file.sendFile);
 			app.get('/app/findFile/:id', file.findFile);
-			app.get('/admin/index', file.indexFile);
+			app.get('/admin/index/:token', file.indexFile);
 			app.get('/app/find/:key', file.searchDocument);
 			app.post('/app/findMongo', file.getFileMongo);
 			app.post('/app/addRating/', file.addRating);
@@ -21,7 +21,7 @@ module.exports = function(app) {
 			app.post('/app/addComment', file.addComment);
 			app.get('/app/getComment/:id', file.getComment);
 			app.get('/app/getDownloads/:id', file.getDownloads);
-			app.post('/admin/removeFile', file.removeFile);
+			app.post('/admin/removeFile/:token', file.removeFile);
 
 
 
