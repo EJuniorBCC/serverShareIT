@@ -3,13 +3,10 @@ module.exports = function(req, res, next) {
 	var token = '';
 	var config = require('../config');
 
-	console.log(req.params);
 
-	if (req.params.token) {
-		token = req.params.token
+	if (req.body.token) {
+		token = req.body.token
 	}
-
-	console.log(token);
 
 
 	jwt.verify(token, config.secret, function(err, data) {
