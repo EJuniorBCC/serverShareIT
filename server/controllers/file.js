@@ -302,7 +302,7 @@ module.exports = function(app) {
 
                             res.json({
                                 status: 'Erro',
-                                data: "Nenhum arquivo encontrado"
+                                data: []
                             });
 
                         } else {
