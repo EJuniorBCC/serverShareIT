@@ -106,7 +106,6 @@ module.exports = function(app) {
 
                 var newName = removerAcentos(filename);
                 var ext = newName.slice(-4);
-                fields.typeFile = ext;
                 fields.nameFile = newName;
 
 
@@ -199,7 +198,8 @@ module.exports = function(app) {
 
                     } else {
                         res.json({
-                            status: "Arquivo não encontrado"
+                            status: "Arquivo não encontrado",
+                            data: []
                         });
                     }
 
@@ -212,6 +212,8 @@ module.exports = function(app) {
             var exec = require('child_process').exec,
                 child;
 
+
+
             fs.readdir(pathIndexar, function(err, data) {
                 if (err) {
                     res.json({
@@ -220,21 +222,39 @@ module.exports = function(app) {
                 }
                 var ids = [];
                 var mod = {
-                    status: 'indexado'
+                    status: 'indexado',
+                    filePath:''
                 }
                 var query = {
                     _id: ''
                 }
                 for (var i = 0; i < data.length; i++) {
                     query._id = data[i].slice(0, -4);
-                    File.update(query, mod, function(err, data) {
+
+                    File.findOne(query, function(err, data) {
                         if (err) {
                             res.json({
                                 status: err
-                            })
-                        }
+                            });
+                        } else {
 
+                            mod.filePath = data.filePath.replace('indexar', 'indexado');
+                          
+
+                            File.update(query, mod, function(err, data) {
+                                if (err) {
+                                    res.json({
+                                        status: err
+                                    })
+                                }
+
+                            });
+
+
+                        }
                     });
+
+
                 }
 
             });
@@ -312,10 +332,10 @@ module.exports = function(app) {
 
                         File.find(qy, {
                             nameFile: 1,
-                            typeFile:1,
-                            description:1,
-                            filePath:1,
-                            title:1
+                            typeFile: 1,
+                            description: 1,
+                            filePath: 1,
+                            title: 1
                         }, function(err, data) {
                             if (err) {
                                 res.json({
