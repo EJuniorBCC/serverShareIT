@@ -66,8 +66,8 @@ module.exports = function(app) {
 			var toEmail = {
 				transport:{
 					host:"smtp.gmail.com",
-					user:'farmazap.cadastro@gmail.com',
-					password:'Farma@zap$'
+					user:'email@gmail.com',
+					password:'password'
 				},
 				mailOptions:{
 					from:"Farmazap <farmazap.cadastro@gmail.com>",
