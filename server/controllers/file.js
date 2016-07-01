@@ -76,13 +76,13 @@ module.exports = function(app) {
 
             }
 
-            /*toEmail = {
+            toEmail = {
 
                 mailOptions: {
                     from: 'shareit.ufrpe@gmail.com',
-                    to: user.email,
+                    to: fields.email,
                     subject: 'Status Arquivo',
-                    html: 'Arquivo em análise'
+                    html: 'Arquivo em Análise'
                 }
             }
 
@@ -92,7 +92,7 @@ module.exports = function(app) {
                 } else {
                     console.log('success');
                 }
-            });*/
+            });
 
 
 
@@ -223,7 +223,7 @@ module.exports = function(app) {
                 var ids = [];
                 var mod = {
                     status: 'indexado',
-                    filePath:''
+                    filePath: ''
                 }
                 var query = {
                     _id: ''
@@ -240,8 +240,6 @@ module.exports = function(app) {
 
                             if (data) {
 
-                                console.log(data);
-
 
                                 var txt = {
                                     text: 'Arquivo ' + data.title + ' adicionado. Descricão: ' + data.description + '.'
@@ -252,6 +250,24 @@ module.exports = function(app) {
                                         console.log(err);
                                     }
                                     console.log(data);
+                                });
+
+                                toEmail = {
+
+                                    mailOptions: {
+                                        from: 'shareit.ufrpe@gmail.com',
+                                        to: data.email,
+                                        subject: 'Status Arquivo',
+                                        html: 'Arquivo Aceito'
+                                    }
+                                }
+
+                                sendEmail.sendEmail(toEmail, function(err, data) {
+                                    if (err) {
+                                        console.log(err);
+                                    } else {
+                                        console.log('success');
+                                    }
                                 });
 
                                 mod.filePath = data.filePath.replace('indexar', 'indexado');
@@ -265,9 +281,9 @@ module.exports = function(app) {
                                     }
 
                                 });
-                            }else{
+                            } else {
                                 res.json({
-                                    status:'Erro ao indexar'
+                                    status: 'Erro ao indexar'
                                 });
                             }
 
@@ -702,6 +718,23 @@ module.exports = function(app) {
                         var mod = {
                             status: 'deletado'
                         }
+                        toEmail = {
+
+                            mailOptions: {
+                                from: 'shareit.ufrpe@gmail.com',
+                                to: file.email,
+                                subject: 'Status Arquivo',
+                                html: 'Arquivo rejeitado'
+                            }
+                        }
+
+                        sendEmail.sendEmail(toEmail, function(err, data) {
+                            if (err) {
+                                console.log(err);
+                            } else {
+                                console.log('success');
+                            }
+                        });
 
                         fs.unlink(file.filePath, function(err, data) {
                             if (err) {
